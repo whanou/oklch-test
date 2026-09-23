@@ -25,7 +25,6 @@ dist-ssr
 *.sln
 *.sw?
 
-repos/
 .omc
 
 *.tsbuildinfo

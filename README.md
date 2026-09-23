@@ -1,18 +1,9 @@
-# @whanou/oklch-test
+# oklch-test
 
 An accessible OKLCH colour tool. One colour is the active edit target; you adjust lightness,
 chroma and hue directly, hear whether text is readable on it, and copy the result.
 
 Built for screen-reader use first. The sighted view is a view of the same state.
-
-## Isolation
-
-This package imports **nothing** from the rest of the monorepo and pins every dependency
-explicitly rather than through pnpm `catalog:`. Copy the directory out of this repo and
-`pnpm install && pnpm build` still works.
-
-`src/isolation.test.ts` enforces both properties mechanically — it fails on a `@whanou/*`
-import, on a path escaping the package, and on any `catalog:` or `workspace:` specifier.
 
 ## Commands
 
@@ -26,8 +17,8 @@ pnpm test      # unit tests
 ## Deployment
 
 `.github/workflows/deploy-oklch-test.yml` builds and publishes `dist/` to GitHub Pages on
-pushes to `main` that touch this package. The workflow injects `BASE_PATH=/<repo>/`, which
-is what a GitHub Pages **project site** requires — without it every asset URL 404s.
+every push to `main`. The workflow injects `BASE_PATH=/<repo>/`, which is what a GitHub Pages
+**project site** requires — without it every asset URL 404s.
 
 **One-time setup:** in the repository settings, set *Pages → Build and deployment → Source*
 to **GitHub Actions**. The workflow cannot do this for you.
