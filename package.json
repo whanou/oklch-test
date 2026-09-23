@@ -1,0 +1,23 @@
+{
+  "name": "@whanou/oklch-test",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Accessible OKLCH colour tool. Fully isolated: no workspace imports, explicit dependency versions, deployable standalone.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "apca-w3": "0.1.9",
+    "colorjs.io": "0.7.1"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vite": "7.3.1",
+    "vitest": "4.1.11"
+  }
+}

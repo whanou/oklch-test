@@ -1,0 +1,66 @@
+name: Deploy oklch-test to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/oklch-test/**'
+      - '.github/workflows/deploy-oklch-test.yml'
+  workflow_dispatch:
+
+# Least privilege: only what Pages deployment needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; do not cancel a run that is mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.0
+
+      - uses: actions/setup-node@v4
+        with:
+          # The repo requires >=22.12; Vite 7 requires >=20.19 or >=22.12.
+          node-version: 22.12.0
+          cache: pnpm
+
+      - name: Install
+        # The package declares explicit versions and imports nothing from the workspace,
+        # but it still lives inside one, so install from the root lockfile.
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify isolation
+        run: pnpm --filter @whanou/oklch-test test
+
+      - name: Build
+        env:
+          # GitHub Pages project sites serve from /<repo>/, so assets need that prefix.
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: pnpm --filter @whanou/oklch-test build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/oklch-test/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
